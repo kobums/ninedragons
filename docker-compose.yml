@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  back:
+    image: ${DOCKER_USERNAME:-yourusername}/ninedragons-back:${VERSION:-latest}
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: ninedragons-back
+    ports:
+      - "8003:8003"
+    restart: unless-stopped
+    networks:
+      - ninedragons-network
+
+  web:
+    image: ${DOCKER_USERNAME:-yourusername}/ninedragons-web:${VERSION:-latest}
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: ninedragons-web
+    ports:
+      - "9003:80"
+    restart: unless-stopped
+    networks:
+      - ninedragons-network
+    depends_on:
+      - back
+
+networks:
+  ninedragons-network:
+    driver: bridge
